@@ -1,7 +1,7 @@
 
 import os
 import glob
-import yaml
+from yaml import safe_load_all
 import logging
 from src.app.logger import Logger
 from src.config import Config
@@ -48,7 +48,7 @@ class SigmaConverter:
         """
         try:
             with open(file_path, encoding="utf8") as file:
-                docs = yaml.safe_load_all(file)
+                docs = safe_load_all(file)
                 rule = dict()
                 for doc in docs:
                      for key, value in doc.items():
@@ -84,16 +84,16 @@ class SigmaConverter:
             for rule in self.rules:
                 print(str(rule))
                 if rule.get("title") and rule.get("title")[0] != None:
-                    title = ", ".join(rule.get("title"))
+                    title = ", ".join(filter(None, rule.get("title")))
                     sheet1.write(index, 0, str(title))
                 if rule.get("status") and rule.get("status")[0] != None:
-                    status = ", ".join(rule.get("status"))
+                    status = ", ".join(filter(None, rule.get("status")))
                     sheet1.write(index, 1, str(status))
                 if rule.get("description") and rule.get("description")[0] != None:
-                    description =  ", ".join(rule.get("description"))
+                    description =  ", ".join(filter(None, rule.get("description")))
                     sheet1.write(index, 2, str(description))
                 if rule.get("references") and rule.get("references")[0] != None:
-                    references = ", ".join( ", ". join(references) for references in rule.get("references"))
+                    references = ", ".join( ", ". join(filter(None, references)) for references in rule.get("references") if references)
                     sheet1.write(index, 3, str(references))
                 if rule.get("logsource") and rule.get("logsource")[0] != None:
                     logsource = ", ".join("Category: {}".format(logsource.get("category")) +
@@ -101,16 +101,16 @@ class SigmaConverter:
                 " - " +"Service: {}".format(logsource.get("service")) for logsource in rule.get("logsource"))
                     sheet1.write(index, 4, str(logsource))
                 if rule.get("falsepositives") and rule.get("falsepositives")[0] != None:
-                    falsepositives = ", ".join( ", ". join(falsepositives) for falsepositives in rule.get("falsepositives"))
+                    falsepositives = ", ".join( ", ". join(filter(None, falsepositives)) for falsepositives in rule.get("falsepositives"))
                     sheet1.write(index, 5, str(falsepositives))
                 if rule.get("level") and rule.get("level")[0] != None:
-                    level = ", ".join(rule.get("level"))
+                    level = ", ".join(filter(None, rule.get("level")))
                     sheet1.write(index, 6, str(level))
                 if rule.get("tags") and rule.get("tags")[0] != None:
-                    tags = ", ".join( ", ". join(tags) for tags in rule.get("tags"))
+                    tags = ", ".join( ", ". join(filter(None, tags)) for tags in rule.get("tags"))
                     sheet1.write(index, 7, str(tags))
                 if rule.get("modified") and rule.get("modified")[0] != None:
-                    modified = ", ".join(rule.get("modified"))
+                    modified = ", ".join(filter(None, rule.get("modified")))
                     sheet1.write(index, 8, str(modified))
                 index += 1
 

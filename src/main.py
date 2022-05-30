@@ -1,7 +1,8 @@
+from src.app.sigma import SigmaConverter
 import sys
 sys.path.append("../")
 
-from src.app.sigma import SigmaConverter
+
 
 if __name__ == "__main__":
     sigmaconverter = SigmaConverter()
